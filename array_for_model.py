@@ -13,7 +13,22 @@ def classification_pairing(df, clf, seq_length=100):
             seq[j]= df.values[i+j]
         x.append(seq.flatten())
         #conditional if distance average is too big
-        y.append(clf) # To be Changed !!!!!!!!!
+        y.append(clf) # To be Changed (with distance.mean() or distance.var())
+    return x, y
+
+#Classification Based on Test ID
+
+def classification_pairing_2(df, clf, seq_length=100):
+    x=[]
+    y=[]
+    for test_id in df['Test ID']:
+        df_temp = df[df['Test ID']==test_id]
+        seq= np.zeros((df_temp.shape[0], df_temp.shape[1]))
+        for j in range(df_temp.shape[0]):
+            seq[j]=df_temp.values[j]
+        x.append(seq.flatten())
+        y.append(clf)
+
     return x, y
 
 def create_the_array():
@@ -26,12 +41,19 @@ def create_the_array():
 
     columns = ['X', 'Y', 'Z', 'Pressure', 'Grip Angle', 'Timestamp', 'Test ID' ]
     
+    #z = 1
     for i, folder1 in enumerate(os.listdir(path)):
         for f in os.listdir(path + '/' + folder1):
             df = pd.read_csv(path + '/' + folder1 + '/' + f, sep = ';', names = columns)
             
             #use the enhanced data
+            new_columns = ['Z','Pressure','Grip Angle','Timestamp','Test ID','X Displacement','Y Displacement','Distance', 'Stable']
             dfe = ce.modify_columns(df)
+
+            #Saving Individual DataFrame (For Checking Purpose)
+            #path2 = 'individual_dataframe'
+            #dfe.to_csv(path2 + '/' + folder1 + '/' + str(z) + '.csv',index= False, header =True)
+            #z += 1
 
             x_temp, y_temp = classification_pairing(dfe, i)
             x.append(x_temp)
@@ -39,9 +61,6 @@ def create_the_array():
     
     array_of_x = np.concatenate(x, axis = 0)
     array_of_y = np.concatenate(y, axis = 0)
-
-    x3 = np.concatenate(x, axis = 0)
-    y3 = np.concatenate(y, axis = 0)
 
     df_save = pd.DataFrame(array_of_x)
     df_save['target'] = array_of_y

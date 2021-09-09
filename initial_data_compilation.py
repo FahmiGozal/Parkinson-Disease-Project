@@ -7,7 +7,7 @@ import os
 
 df_save = afm.create_the_array()
 
-df_save.to_csv('model_array.csv', index=False, header = True)
+df_save.to_csv('model_array_2.csv', index=False, header = True)
 
 
 
