@@ -4,7 +4,7 @@ import pandas as pd
 import column_enhancement as ce
 import os
 
-def classification_pairing(df, clf, seq_length=6):
+def classification_pairing(df, clf, seq_length=100):
     x=[]
     y=[]
     for i in range(0, (df.shape[0]- seq_length +1), seq_length+1):
@@ -12,7 +12,7 @@ def classification_pairing(df, clf, seq_length=6):
         for j in range(seq_length):
             seq[j]= df.values[i+j]
         x.append(seq.flatten())
-        y.append(clf)
+        y.append(clf) # To be Changed !!!!!!!!!
     return x, y
 
 def create_the_array():
