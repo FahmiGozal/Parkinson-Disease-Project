@@ -12,6 +12,7 @@ def classification_pairing(df, clf, seq_length=100):
         for j in range(seq_length):
             seq[j]= df.values[i+j]
         x.append(seq.flatten())
+        #conditional if distance average is too big
         y.append(clf) # To be Changed !!!!!!!!!
     return x, y
 
@@ -39,7 +40,10 @@ def create_the_array():
     array_of_x = np.concatenate(x, axis = 0)
     array_of_y = np.concatenate(y, axis = 0)
 
-    df_save = np.concatenate(array_of_x, axis = 0)
+    x3 = np.concatenate(x, axis = 0)
+    y3 = np.concatenate(y, axis = 0)
+
+    df_save = pd.DataFrame(array_of_x)
     df_save['target'] = array_of_y
 
     return df_save
