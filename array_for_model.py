@@ -31,8 +31,7 @@ def classification_pairing_2(df, clf, seq_length=100):
 
     return x, y
 
-def create_the_array():
-    path ='hw_dataset'
+def create_the_array(path):
 
     #Combine all data into a single array to feed to ML model
     #Empty x and y as placeholder for final use
@@ -47,7 +46,7 @@ def create_the_array():
             df = pd.read_csv(path + '/' + folder1 + '/' + f, sep = ';', names = columns)
             
             #use the enhanced data
-            new_columns = ['Z','Pressure','Grip Angle','Timestamp','Test ID','X Displacement','Y Displacement','Distance', 'Stable']
+            new_columns = ['Z','Pressure','Grip Angle','Test ID','X Displacement','Y Displacement','Distance', 'Stable']
             dfe = ce.modify_columns(df)
 
             #Saving Individual DataFrame (For Checking Purpose)
@@ -55,9 +54,55 @@ def create_the_array():
             #dfe.to_csv(path2 + '/' + folder1 + '/' + str(z) + '.csv',index= False, header =True)
             #z += 1
 
+            #New Classification on Distance Stability
+            #if df_copy['Distance'].mean() < 2:
+                #df_copy['Stable'] = 0
+            #else:
+                #df_copy['Stable'] = 1
+
             x_temp, y_temp = classification_pairing(dfe, i)
             x.append(x_temp)
             y.append(y_temp)
+    
+    array_of_x = np.concatenate(x, axis = 0)
+    array_of_y = np.concatenate(y, axis = 0)
+
+    df_save = pd.DataFrame(array_of_x)
+    df_save['target'] = array_of_y
+
+    return df_save
+
+def create_specific_array(path, i):
+
+    #Combine all data into a single array to feed to ML model
+    #Empty x and y as placeholder for final use
+    x = []
+    y = []
+
+    columns = ['X', 'Y', 'Z', 'Pressure', 'Grip Angle', 'Timestamp', 'Test ID' ]
+    
+    #z = 1
+    for f in os.listdir(path):
+        df = pd.read_csv(path + '/' + f, sep = ';', names = columns)
+            
+        #use the enhanced data
+        new_columns = ['Z','Pressure','Grip Angle','Test ID','X Displacement','Y Displacement','Distance', 'Stable']
+        dfe = ce.modify_columns(df)
+
+        #Saving Individual DataFrame (For Checking Purpose)
+        #path2 = 'individual_dataframe'
+        #dfe.to_csv(path2 + '/' + folder1 + '/' + str(z) + '.csv',index= False, header =True)
+        #z += 1
+
+        #New Classification on Distance Stability
+        #if df_copy['Distance'].mean() < 2:
+            #df_copy['Stable'] = 0
+        #else:
+            #df_copy['Stable'] = 1
+
+        x_temp, y_temp = classification_pairing(dfe, i)
+        x.append(x_temp)
+        y.append(y_temp)
     
     array_of_x = np.concatenate(x, axis = 0)
     array_of_y = np.concatenate(y, axis = 0)

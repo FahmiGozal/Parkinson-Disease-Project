@@ -14,12 +14,6 @@ def modify_columns(df):
         df_copy['Y Displacement'][i] = abs(df_copy.Y[i]-df_copy.Y[i-1])
         df_copy['Distance'][i] = math.sqrt(df_copy['X Displacement'][i]^2 + df_copy['Y Displacement'][i]^2)
 
-    df_copy.drop(['X', 'Y'], axis=1, inplace=True)
-
-    #New Classification on Distance Stability
-    if df_copy['Distance'].mean() < 2:
-        df_copy['Stable'] = 0
-    else:
-        df_copy['Stable'] = 1
+    df_copy.drop(['X', 'Y', 'Timestamp'], axis=1, inplace=True)
     
     return df_copy
